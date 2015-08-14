@@ -1,6 +1,6 @@
 # Twitinder Game
 
-A silly little app to match up Twitter Users based on Similar Likes.
+A little app to match up Twitter Users based on Similar Likes.
 
 If you want to play around with it, go ahead. Just install it using the 'npm install' method to get it up and running.
 
