@@ -81,4 +81,4 @@ var trendData = [
       }
     ]
   }
-]
+];

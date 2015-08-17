@@ -112,20 +112,11 @@ gulp.task('imagewatch', ['images'], function() {
 
 
 // Runner
-gulp.task('watch', ['scripts','sass','css'], function() {
-	// Run the browser sync
-	browserSync.init({
-		server: './client'
-		port: 3030
-	});
-	gulp.watch( './app/**/*.scss', ['sass'] );
-	gulp.watch( './app/**/*.css', ['css'] );
-	gulp.watch( './app/**/*.js', ['scripts'] );
-	// gulp.watch( './app/**/*.jade', ['templates'] );
-	// gulp.watch( ['./app/**/*.json','./app/**/*.html'], ['templates'] );
-});
+gulp.task('watch', ['scripts','sass','css'], watchAll);
 
-gulp.task('watch-q', [], function() {
+gulp.task('watch-q', [], watchAll);
+
+function watchAll() {
 	// Run the browser sync
 	browserSync.init({
 		server: './client',
@@ -136,7 +127,8 @@ gulp.task('watch-q', [], function() {
 	gulp.watch( './app/**/*.js', ['scripts'] );
 	// gulp.watch( './app/**/*.jade', ['templates'] );
 	// gulp.watch( ['./app/**/*.json','./app/**/*.html'], ['templates'] );
-});
+};
 
 // Default task runner for Gulp
 gulp.task('default', ['scripts','sass']);
+

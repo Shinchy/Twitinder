@@ -3,8 +3,6 @@
 // Generated on Thu Aug 13 2015 18:01:51 GMT+0100 (GMT Daylight Time)
 
 module.exports = function(config) {
-
-
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -17,7 +15,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       // Fixture files for Mock Data Analysis
-      'server/mocks/*.json',
+      'server/mocks/trends.js',
 
       // Files we are testing against
       'app/js/game.js',
@@ -36,15 +34,15 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'app/**/*.js': ['browserify'],
+        // 'app/**/*.js': ['browserify'],
         'tests/**/*.js': ['browserify']
     },
 
-    browserify: {
-        debug: true,        
-        transform: [ 'babelify' ],
-        bundleDelay: 2000
-    },
+    // browserify: {
+    //     debug: true,        
+    //     transform: [ 'babelify' ],
+    //     bundleDelay: 2000
+    // },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -64,13 +62,12 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-    // start these browsers
+    // start these browsers - PhantomJS or Chrome
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS'],
 
-    // If browser does not capture in given timeout [ms], kill it
-    // CLI --capture-timeout 5000
-    captureTimeout: 20000,
+    // If the browser does not respond after 100secs, close it down (prevents a bug in Karma)
+    // browserNoActivityTimeout: 100000,
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

@@ -44,12 +44,11 @@
 			// Go through all the data and refine it into an Array
 			// This is hard coded and based on the current set up for the Twitter Data
 			refineTrends: function refineTrend( twitterData ) {
-				var returnArray = [];
-
-				
+				var returnArray = [];				
 
 				// Should return something akin to this
 				var mockReturnData = [{image: 'some', name: 'some', url: 'some'},{image: 'some', name: 'some', url: 'some'},{image: 'some', name: 'some', url: 'some'}];
+
 				// Return the mock data
 				return mockReturnData;
 			}
@@ -69,8 +68,9 @@
 			increasePos: function() {
 				currentPos += 1;
 			},
-			loadNextItem: function() {
+			loadNextItem: function( card ) {
 				// Load in the next item on the list
+				
 			},
 			removeItemFromList: function( item ) {
 				// Remove the item from the list
@@ -86,14 +86,21 @@
 							(cards[current].name || 'none'),
 							(cards[current].url || 'none')
 						);
-				return (current >= cards.length) ? returnArray : createCard(cards,current++,returnArray);
+				return (current+1 >= cards.length) ? returnArray : createCard( cards, current+=1, returnArray);
 			},
-			start: function( data ) {
+			start: function( data ) {				
 				// Start the game ... the setup lives here
+				// If we have no data, we can't start
 				if (!data) return false;
-				// Call the data function with the information
+
+				// Call the data function with the information we have so that
+				// we can create an array of cards
 				var arrayOfContent = this.createCards( data );
 
+				// Add the current card to the stage
+				this.loadNextItem( arrayOfContent[_currentScore] );
+
+				// All is okay to return a positive
 				return true;
 			}
 		};
@@ -121,6 +128,13 @@
 			},
 			disliked: function() {
 				// This is not good
+			},
+			createElement: function( text, img, url ) {
+				// Load in the next item on the list
+				var cardElement = document.createElement("div");
+				var cardContent = document.createTextNode(text);
+				cardElement.appendChild(cardContent);
+				return(cardElement);
 			}
 		};
 
