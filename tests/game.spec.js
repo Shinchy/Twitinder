@@ -1,16 +1,48 @@
 // Test Suite for the Revlon Game
 // 
+import GameModule from '../app/js/twitinder-main.js';
+
 
 describe("Game Test Units", function(){
 
+	// Used by all
+	// Quick reference for the Game Module 
+	var game = GameModule;
+	// Mock data from the mock server
+	var	mockTrendingData = ['Hello','Test','Something'];
+	var	mockTweetsData = '';
+
+
+
 	// Before hand lets load in the Module
-	beforeEach(function(){
-		var game = Object.create();
+	// beforeEach(function() {
+	// });
+
+
+	it("Should start when given the data", function() {
+		// Note on Mock Data
+		// We are loading in two basic JSON files, one is trendData and the other is tweetsData
+		// both are available to the whole test suite, the trends data houses the current trends
+		// the tweets houses the tweets we have recieved from that response
+		expect(game.logic.start(mockReturnedData))
+			.toBe(true);
+	});
+	it("Should fail when no data is given", function() {
+		expect(game.logic.start(null))
+			.toBe(false);
 	});
 
+	it("Should return an array of cards when we pass in the data", function() {
+		// Get the correct data from our mock
+		var mockReturnData = game.twitterLoader.refineTrends(trendData);
+
+		// 
+		expect(game.logic.createCards(mockReturnData))
+			.toEqual(jasmine.any(Array));
+	});
 
 	it("Should discard a disliked card", function() {
-		//- Test
+		
 	});
 
 	it("Should add a liked card to the array", function() {

@@ -116,6 +116,7 @@ gulp.task('watch', ['scripts','sass','css'], function() {
 	// Run the browser sync
 	browserSync.init({
 		server: './client'
+		port: 3030
 	});
 	gulp.watch( './app/**/*.scss', ['sass'] );
 	gulp.watch( './app/**/*.css', ['css'] );
@@ -127,7 +128,8 @@ gulp.task('watch', ['scripts','sass','css'], function() {
 gulp.task('watch-q', [], function() {
 	// Run the browser sync
 	browserSync.init({
-		server: './client'
+		server: './client',
+		port: 3030
 	});
 	gulp.watch( './app/**/*.scss', ['sass'] );
 	gulp.watch( './app/**/*.css', ['css'] );

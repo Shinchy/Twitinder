@@ -8,9 +8,9 @@
 (function() {
 
 	// Some scoped variables that can be used and accessed by anything within this IIFE
-	var currentScore 	= 0,
-		currentPos 		= 0,
-		likedItems		= [];
+	var _currentScore 	= 0,
+		_currentPos 	= 0,
+		_likedItems		= [];
 
 
 	// Set up the game modules within this system
@@ -22,11 +22,13 @@
 	// the server loads in the files using a little bit of PHP code.
 	var twitterLoader = (function() {
 
+		// The location and settings for the files we will load in
 		var settings = {
 			serverURL: 'http://www.shinchy.com/twitinder/',
 			serverQuery: ''
 		};
 
+		// The returned methods
 		return {
 			getHashTags: function( query, onCompleteFunction, url ) {
 				var serverRequest = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -38,16 +40,28 @@
 						throw "Failed to load Server Request, no response";
 				};
 				serverRequest.send();
+			},
+			// Go through all the data and refine it into an Array
+			// This is hard coded and based on the current set up for the Twitter Data
+			refineTrends: function refineTrend( twitterData ) {
+				var returnArray = [];
+
+				
+
+				// Should return something akin to this
+				var mockReturnData = [{image: 'some', name: 'some', url: 'some'},{image: 'some', name: 'some', url: 'some'},{image: 'some', name: 'some', url: 'some'}];
+				// Return the mock data
+				return mockReturnData;
 			}
 		};
 
-	});
+	})();
 
 	var gameLogic = (function(){
 		// A set of functions that control how the Liked / Disliked style game works
 		return {
-			addToGood: function($item) {
-				likedItems.push($item);
+			addToGood: function( item ) {
+				likedItems.push(item);
 			},
 			increaseScore: function() {
 				currentScore += 1;
@@ -58,25 +72,41 @@
 			loadNextItem: function() {
 				// Load in the next item on the list
 			},
-			removeItemFromList: function($item) {
+			removeItemFromList: function( item ) {
 				// Remove the item from the list
 			},
 			restart: function() {
 				// Restart the game
 			},
-			start: function() {
+			createCards: function createCard(cards, current, returnArray) {
+				current = current || 0;
+				returnArray = returnArray || [];
+				returnArray[current] = placeCard( 
+							(cards[current].image || 'none'),
+							(cards[current].name || 'none'),
+							(cards[current].url || 'none')
+						);
+				return (current >= cards.length) ? returnArray : createCard(cards,current++,returnArray);
+			},
+			start: function( data ) {
 				// Start the game ... the setup lives here
+				if (!data) return false;
+				// Call the data function with the information
+				var arrayOfContent = this.createCards( data );
+
+				return true;
 			}
 		};
 	})();
 
 	// Each item should be it's own specific Object so that it can contain all it's elements
-	var placeCard = (function(){
+	var placeCard = function( image, name, url ) {
 
 		var info = {
-			image: '',
-			name: '',
-			opp: ''
+			image: image,
+			name: name,
+			url: url,
+			pos: _currentPos
 		};
 
 		return {
@@ -94,13 +124,19 @@
 			}
 		};
 
-	})();
+	};
 
 
 	// The game modules are added to a returned Object OR in this case we can just call an init method,
 	// this just enables the only items we want to be exported to be done so.
-	
-	gameLogic.start();
+
+	// Export the a new object as a Module
+	var GameModule = {
+		twitterLoader: twitterLoader,
+		logic: gameLogic,
+		placeCard: placeCard
+	};
+	module.exports = GameModule;
 
 
 })();
