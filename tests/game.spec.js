@@ -17,13 +17,12 @@ describe("Game units tests", function() {
 	var mockReturnData = game.twitterLoader.refineTrends(trendData);	
 
 
-	it("Should start when given the data", function() {
-		// Note on Mock Data
-		// We are loading in two basic JSON files, one is trendData and the other is tweetsData
-		// both are available to the whole test suite, the trends data houses the current trends
-		// the tweets houses the tweets we have recieved from that response
-		expect(game.logic.start(mockReturnData)).toBe(true);
-	});
+
+	// Note on Mock Data
+	// We are loading in two basic JSON files, one is trendData and the other is tweetsData
+	// both are available to the whole test suite, the trends data houses the current trends
+	// the tweets houses the tweets we have recieved from that response		
+
 	it("Should fail when no data is given", function() {
 		expect(game.logic.start(null)).toBe(false);
 	});
@@ -33,7 +32,7 @@ describe("Game units tests", function() {
 	});
 
 	it("Should discard a disliked card", function() {
-		
+		// expect(game.logic.addToGood()).toBe(true);
 	});
 
 	it("Should add a liked card to the array", function() {

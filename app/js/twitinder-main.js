@@ -10,7 +10,8 @@
 	// Some scoped variables that can be used and accessed by anything within this IIFE
 	var _currentScore 	= 0,
 		_currentPos 	= 0,
-		_likedItems		= [];
+		_likedItems		= [],
+		_stageID 		= "game";
 
 
 	// Set up the game modules within this system
@@ -56,21 +57,39 @@
 
 	})();
 
+	// Stage Controls, this is where all the dom elements are handled
+	var gameViewController = (function(){
+		var _stage = document.getElementById(_stageID);
+		var _stageItems = [];
+
+		return {
+			addToStage: function(obj) {
+				// if(obj) _stage.appendChild(obj);
+			},
+			removeFromStage: function(objRef) {
+
+			}
+		};
+	})();
+
+
+	// A set of functions that control how the Liked / Disliked style game works
 	var gameLogic = (function(){
-		// A set of functions that control how the Liked / Disliked style game works
 		return {
 			addToGood: function( item ) {
-				likedItems.push(item);
+				_likedItems.push(item);
+				return true;
 			},
 			increaseScore: function() {
 				currentScore += 1;
 			},
 			increasePos: function() {
 				currentPos += 1;
+				this.loadNextItem();
 			},
 			loadNextItem: function( card ) {
 				// Load in the next item on the list
-				
+				gameViewController.addToStage(card);
 			},
 			removeItemFromList: function( item ) {
 				// Remove the item from the list
@@ -79,13 +98,19 @@
 				// Restart the game
 			},
 			createCards: function createCard(cards, current, returnArray) {
+				// Crate default values
 				current = current || 0;
 				returnArray = returnArray || [];
+				// Add a new item to the array
 				returnArray[current] = placeCard( 
 							(cards[current].image || 'none'),
 							(cards[current].name || 'none'),
 							(cards[current].url || 'none')
 						);
+				// Assign all the Event Listeners to this card
+				returnArray[current].element.addEventListener('LIKED', this.addToGood);
+				returnArray[current].element.addEventListener('DISLIKED', this.removeItemFromList);
+				// Finally if we need to get some more do, otherwise return the array
 				return (current+1 >= cards.length) ? returnArray : createCard( cards, current+=1, returnArray);
 			},
 			start: function( data ) {				
@@ -116,6 +141,26 @@
 			pos: _currentPos
 		};
 
+		// Load in the next item on the list
+		// Main Element
+		var cardElement = document.createElement("div");
+		cardElement.classList.add('game-card');
+		// Card Image element
+		var cardImage = document.createElement("img");
+		cardImage.classList.add('game-card-img');
+		cardImage.src = image;
+		cardImage.alt = name;
+		// Card Name (text)
+		var cardInfo = document.createElement('p');
+		cardInfo.classList.add('game-card-info');
+		var cardContent = document.createTextNode(name);
+		cardInfo.appendChild(cardContent);
+		// Add all of these to the main object
+		cardElement.appendChild(cardImage);
+		cardElement.appendChild(cardInfo);
+
+
+		// Create a return object
 		return {
 			animatedMove: function() {
 
@@ -123,19 +168,29 @@
 			dragged: function() {
 
 			},
+			// This is one I like
 			liked: function() {
-				// This is one I like
+				// Check the browser support
+				var likedEvent = (document.createEvent) ? document.createEvent('HTMLEvents') : document.createEventObject();
+				likedEvent.initEvent('LIKED',true,true);
+				likedEvent.eventType = 'LIKED';
+				// IE Fall back and Fix
+				if(document.createEvent) cardElement.dispatchEvent(likedEvent);
+					cardElement.fireEvent('on' + likedEvent.eventType, likedEvent);
 			},
+			// This is not good
 			disliked: function() {
-				// This is not good
+				// Check the browser support
+				var dislikedEvent = (document.createEvent) ? document.createEvent('HTMLEvents') : document.createEventObject();
+				dislikedEvent.initEvent('DISLIKED',true,true);
+				dislikedEvent.eventType = 'DISLIKED';
+				// IE Fall back and Fix
+				if(document.createEvent) cardElement.dispatchEvent(dislikedEvent);
+					cardElement.fireEvent('on' + dislikedEvent.eventType, dislikedEvent);
 			},
-			createElement: function( text, img, url ) {
-				// Load in the next item on the list
-				var cardElement = document.createElement("div");
-				var cardContent = document.createTextNode(text);
-				cardElement.appendChild(cardContent);
-				return(cardElement);
-			}
+
+			// Add our created Element Here
+			element: cardElement 
 		};
 
 	};
