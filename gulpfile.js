@@ -1,26 +1,18 @@
 // Gulp file for campaigns
 'use strict';
 
+// Just a simple Gulp File that sorts out the Javascript and the Sass files, this project does not
+// require more complexity
 var gulp 			= require('gulp');
 var sass 			= require('gulp-sass');
-var minifycss 		= require('gulp-minify-css');
 var uglify			= require('gulp-uglify');
 var prefix 			= require('gulp-autoprefixer');
 var babel 			= require('gulp-babel');
 var concatinate		= require('gulp-concat');
-var rename 			= require('gulp-rename');
-var imagemin 		= require('gulp-imagemin');
-var filesize		= require('gulp-filesize');
-var data 			= require('gulp-data');
 var browserSync 	= require('browser-sync');
-var jshintstylish 	= require('jshint-stylish');
 var path 			= require('path');
-var del 			= require('del');
 
 // Global
-// Can be set either Dynamically using a date stamp or set manually by overriding the below with a string.
-var _imageFolderName = '2015_08_Revlon';
-
 // Error handling
 function errorLog( $err )
 {
@@ -35,9 +27,6 @@ function requireUncached( $module ) {
 	return require( $module );
 }
 
-// Browser Sync Server runing on default 3000 //
-
-
 // Sass Task Runner
 gulp.task('sass', function() {
 	gulp.src('./app/scss/**/*.scss')
@@ -46,18 +35,6 @@ gulp.task('sass', function() {
 		.pipe( prefix({
 			browser: ['last 2 versions']
 		}))
-		.pipe( gulp.dest('./client/css') )
-		.pipe( browserSync.stream() );
-});
-
-// CSS Copy Task Runner
-gulp.task('css', function() {
-	gulp.src('./app/css/**/*.css')
-		.pipe( prefix({
-			browser: ['last 2 versions']
-		}))
-		.pipe(minifycss({compatibility: 'ie8'}))		
-		.on('error', errorLog )
 		.pipe( gulp.dest('./client/css') )
 		.pipe( browserSync.stream() );
 });
@@ -73,60 +50,20 @@ gulp.task('scripts', function() {
 		.pipe( browserSync.stream() );
 });
 
-// Clear out metadata from Photohshop Images
-gulp.task('images', function() {
-	// del(['./client/'+_imageFolderName+'/'], function(err,paths) {
-	// 	console.log('deleted files from ' + _imageFolderName + '.');
-	// });
-	gulp.src('./app/images/**/*')
-		.pipe( imagemin({
-			progressive: true,
-			svgoPlugins: [{removeViewBox: false}]
-		}))
-		.pipe(gulp.dest('./client/' + _imageFolderName + '/' ));
-});
-// watch for image changes (this can be temprimental) only useful if you are not renaming images or anything
-gulp.task('imagewatch', ['images'], function() {
-	gulp.watch( './app/images/**/*', ['images'] );
-});
-
-
-
-// Template language compiler for taking Jade templates and moving them over to HTML files
-// gulp.task('templates',function() {
-	
-// 	var YOUR_LOCALS = {};
-
-// 	gulp.src('./app/views/*.jade')
-// 		.pipe( data(function(file){
-// 			return requireUncached('./app/views/data/main.json');
-// 		}))
-// 		.on('error', errorLog )
-// 		.pipe( jade({
-// 			pretty: true
-// 		}))
-// 		.on('error', errorLog )
-// 		.pipe( gulp.dest('./client/') )
-// 		.pipe( browserSync.stream() );
-// });
-
-
 // Runner
 gulp.task('watch', ['scripts','sass','css'], watchAll);
-
 gulp.task('watch-q', [], watchAll);
 
 function watchAll() {
 	// Run the browser sync
+	// Browser Sync Server runing on port 3030
 	browserSync.init({
 		server: './client',
 		port: 3030
 	});
+	// Watch the JS and the Sass files
 	gulp.watch( './app/**/*.scss', ['sass'] );
-	gulp.watch( './app/**/*.css', ['css'] );
 	gulp.watch( './app/**/*.js', ['scripts'] );
-	// gulp.watch( './app/**/*.jade', ['templates'] );
-	// gulp.watch( ['./app/**/*.json','./app/**/*.html'], ['templates'] );
 };
 
 // Default task runner for Gulp
