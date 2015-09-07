@@ -13,6 +13,7 @@
 		_likedItems		= [],
 		_stageID 		= "game";
 
+	
 
 	// Set up the game modules within this system
 	// All below ...
@@ -48,7 +49,11 @@
 				var returnArray = [];				
 
 				// Should return something akin to this
-				var mockReturnData = [{image: 'some', name: 'some', url: 'some'},{image: 'some', name: 'some', url: 'some'},{image: 'some', name: 'some', url: 'some'}];
+				var mockReturnData = [
+					{image: 'some', name: 'some', url: 'some'},
+					{image: 'some', name: 'some', url: 'some'},
+					{image: 'some', name: 'some', url: 'some'}
+					];
 
 				// Return the mock data
 				return mockReturnData;
@@ -108,10 +113,11 @@
 							(cards[current].url || 'none')
 						);
 				// Assign all the Event Listeners to this card
-				returnArray[current].element.addEventListener('LIKED', this.addToGood);
-				returnArray[current].element.addEventListener('DISLIKED', this.removeItemFromList);
-				// Finally if we need to get some more do, otherwise return the array
-				return (current+1 >= cards.length) ? returnArray : createCard( cards, current+=1, returnArray);
+				returnArray[current].element.addEventListener('LIKED', gameLogic.addToGood);
+				returnArray[current].element.addEventListener('DISLIKED', gameLogic.removeItemFromList);
+
+				// Finally if we need to get some more do, otherwise return the array				
+				return (current+1 >= cards.length) ? returnArray : createCard(cards, current+=1, returnArray);
 			},
 			start: function( data ) {				
 				// Start the game ... the setup lives here

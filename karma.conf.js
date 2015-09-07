@@ -24,9 +24,9 @@ module.exports = function(config) {
       'tests/**/*.spec.js'
     ],
 
-    proxies: {
-      '/app/pages/': 'http://localhost:3030/pages/'
-    },
+    // proxies: {
+    //   '/app/pages/': 'http://localhost:3030/pages/'
+    // },
 
     // list of files to exclude
     exclude: [],
@@ -34,20 +34,27 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        // 'app/**/*.js': ['browserify'],
-        'tests/**/*.js': ['browserify']
+        'app/**/*.js': ['browserify'],
+        'tests/**/*.js': ['browserify'] 
     },
 
-    // browserify: {
-    //     debug: true,        
-    //     transform: [ 'babelify' ],
-    //     bundleDelay: 2000
-    // },
+    browserify: {
+        debug: true,
+        transform: [
+            ['babelify', {plugins: ['babel-plugin-espower']}]
+        ]
+    },
+
+    "babelPreprocessor": {
+        // Babel Options
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'mocha'],
+
+ 
 
     // web server port
     port: 9876,
